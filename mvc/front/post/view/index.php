@@ -1,0 +1,1 @@
+<div style="color: #00620C;"><?php echo "POST/INDEX"; ?></div>

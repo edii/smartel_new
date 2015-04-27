@@ -1,0 +1,111 @@
+#deny from all
+
+# Don't show directory listings for URLs which map to a directory.
+Options -Indexes
+
+# Follow symbolic links in this directory.
+Options +FollowSymLinks
+DirectoryIndex loader.php loader.html loader.htm
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  RewriteRule ^ - [E=protossl]
+  RewriteCond %{HTTPS} on
+  RewriteRule ^ - [E=protossl:s]
+
+  RewriteRule "(^|/)\." - [F]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !=/favicon.ico
+  RewriteRule ^ loader.php [L]
+
+  RewriteCond %{REQUEST_URI} ^/adm.php/(.*)$
+  RewriteRule ^adm.php/(.*)$ adm.php [L]  
+
+</IfModule>
+
+# ---------- set cached --------------
+# MONTH
+#<FilesMatch "\.(flv|gif|jpg|jpeg|png|ico|swf)$">
+#Header set Cache-Control "max-age=2592000"
+#</FilesMatch>
+
+# WEEK
+#<FilesMatch "\.(js|css|pdf|txt)$">
+#Header set Cache-Control "max-age=604800"
+#</FilesMatch> 
+# ---------- end ---------------
+
+#<IfModule mod_mime.c>
+    # AddType application/x-httpd-php .php
+ #   AddHandler application/x-httpd-php5 .html .htm
+#</IfModule>
+
+
+# для правельной работы надо подключить к апачу php5apache2_2.dll (LoadModule php5_module "C:/SERVER/php/php5apache.dll")
+#<FilesMatch "^adm$">
+ #   SetHandler application/x-httpd-php
+    #ForceType application/x-httpd-php
+#</FilesMatch>
+
+#<IfModule mod_alias.c>
+ #   RedirectMatch 403 install\.php
+#</IfModule>
+
+# PHP 5, Apache 1 and 2.
+#<IfModule mod_php5.c>
+  #php_flag register_globals on 
+  #php_flag display_errors on  
+
+ #  php_value short_open_tag off 
+  # php_value mbstring.func_overload 6  
+#</IfModule>
+
+
+# Various rewrite rules.
+#<IfModule mod_rewrite.c>
+  #  RewriteEngine on
+
+   # DirectoryIndex loader.php
+   # Options -Indexes
+   # Options +FollowSymLinks
+    
+    #RewriteRule ^ - [E=protossl]
+    #RewriteCond %{HTTPS} on
+    #RewriteRule ^ - [E=protossl:s]
+
+    #RewriteRule "(^|/)\." - [F]
+
+    # ----------- load site other domain ----------------------------
+    # For sites running on a port other than 80
+    #RewriteCond %{HTTP_HOST}   !^www\.lemberg\.dev [NC]
+    #RewriteCond %{HTTP_HOST}   !^$
+    #RewriteCond %{SERVER_PORT} !^80$
+    #RewriteRule ^/(.*)         http://www.lemberg.dev:%{SERVER_PORT}/$1 [L,R]
+
+    # And for a site running on port 80
+    #RewriteCond %{HTTP_HOST}   !^www\.lemberg\.dev [NC]
+    #RewriteCond %{HTTP_HOST}   !^$
+    #RewriteRule ^/(.*)         http://www.lemberg.dev/$1 [L,R]
+    # ---------------- end -------------------------------
+    #RewriteCond %{REQUEST_URI} ^/adm.php/$
+    #RewriteRule ^adm.php/$ adm.php [NC,L]
+
+    #RewriteCond %{REQUEST_URI} ^/adm.php/(.*)$
+    #RewriteRule ^adm.php/(.*)$ adm.php [L]
+    #[R=301.L]
+   
+    #RewriteRule ^adm$ adm.php [NC,L]
+
+    #RewriteCond %{REQUEST_URI} !^/tpl/(.*)$       
+    #RewriteCond %{REQUEST_URI} !^/video/(.*)$     
+    #RewriteCond %{REQUEST_URI} !^/settings/(.*)$  
+    #RewriteCond %{REQUEST_URI} !^/captcha/(.*)$   
+    #RewriteCond %{REQUEST_URI} !^/content/(.*)$
+    #RewriteCond %{REQUEST_URI} !^/templates/(.*)$
+    #RewriteCond %{REQUEST_URI} !^/adm.php/(.*)$
+    #RewriteRule !^(settings/|tpl/|templates/|captcha/|content/|adm/|robots.txt|favicon.ico|ajax.php|phpinfo.php|adm.php)$ go.php [NC,L]
+
+#</IfModule>
